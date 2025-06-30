@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПризмаПринт - Заказ</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        h2 { color: #239439; margin-top: 20px; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0 15px; border: 1px solid #ddd; }
+        button { background: #239439; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        button:hover { background: #1a7a2e; }
+    </style>
+</head>
+<body>
+    <h1>Оформление заказа</h1>
+    <form action="https://formspree.io/f/mkgbybbn" method="POST" id="order-form">
+        
+        <!-- Контактные данные -->
+        <h2>Контактная информация</h2>
+        <label>ФИО*</label>
+        <input type="text" name="customer_name" required>
+        
+        <label>Телефон*</label>
+        <input type="tel" name="customer_phone" required>
+        
+        <label>Email*</label>
+        <input type="email" name="customer_email" required>
+        
+        <label>Адрес</label>
+        <input type="text" name="customer_address">
+        
+        <label>Сообщение</label>
+        <textarea name="customer_message"></textarea>
+
+        <!-- Детали заказа -->
+        <h2>Детали заказа</h2>
+        <label>Тип продукции*</label>
+        <input type="text" name="order_type" required>
+        
+        <label>Тираж (шт.)*</label>
+        <input type="number" name="order_quantity" required>
+        
+        <label>Материал*</label>
+        <input type="text" name="order_material" required>
+        
+        <label>Плотность (г/м²)</label>
+        <input type="text" name="order_density">
+        
+        <label>Ламинация</label>
+        <input type="text" name="order_lamination">
+        
+        <label>Тиснение</label>
+        <input type="text" name="order_foil">
+        
+        <label>Стоимость</label>
+        <input type="text" name="order_price">
+        
+        <label>Дата заказа</label>
+        <input type="date" name="order_date">
+        
+        <label>Комментарий к заказу</label>
+        <textarea name="order_comment"></textarea>
+
+        <!-- Скрытые настройки Formspree -->
+        <input type="hidden" name="_subject" value="Новый заказ: %customer_name%">
+        <input type="hidden" name="_replyto" value="%customer_email%">
+        <input type="hidden" name="_language" value="ru">
+        <input type="text" name="_gotcha" style="display:none"> <!-- Защита от спама -->
+
+        <button type="submit">Отправить заказ</button>
+    </form>
+
+    <!-- JS-валидация -->
+    <script>
+        document.getElementById("order-form").addEventListener("submit", function(e) {
+            const requiredFields = [
+                "customer_name", "customer_phone", "customer_email",
+                "order_type", "order_quantity", "order_material"
+            ];
+            
+            let isValid = true;
+            requiredFields.forEach(field => {
+                const input = document.querySelector(`[name="${field}"]`);
+                if (!input.value.trim()) {
+                    alert(`Заполните поле: ${input.previousElementSibling.textContent}`);
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) e.preventDefault();
+        });
+    </script>
+</body>
+</html>
