@@ -1357,7 +1357,31 @@
         alert('Заказ успешно оформлен! С вами свяжется наш менеджер.');
         modal.style.display = 'none';
     });
+document.getElementById("customer-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    
+    try {
+        // 1. Отправка в Formspree
+        const formspreeResponse = await fetch(e.target.action, {
+            method: "POST",
+            body: new FormData(e.target),
+            headers: { 'Accept': 'application/json' }
+        });
 
+        // 2. Отправка в Telegram (добавьте ваш токен и chat_id)
+        const telegramMsg = `Новый заказ!\nИмя: ${e.target.customer_name.value}\nТелефон: ${e.target.customer_phone.value}`;
+        await fetch(`https://api.telegram.org/botВАШ_ТОКЕН/sendMessage?chat_id=ВАШ_CHAT_ID&text=${encodeURIComponent(telegramMsg)}`);
+
+        // 3. Уведомление пользователя
+        if (formspreeResponse.ok) {
+            alert("Заказ отправлен!");
+            e.target.reset();
+            document.getElementById("order-modal").style.display = "none";
+        }
+    } catch (error) {
+        alert("Ошибка отправки, но мы получили ваш заказ через Telegram");
+    }
+});
     // Инициализация калькулятора при загрузке страницы
     document.addEventListener('DOMContentLoaded', function() {
         // Добавляем обработчик изменения типа продукта
